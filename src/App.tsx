@@ -1,9 +1,10 @@
-import { MoonIcon as MoonSolid } from '@heroicons/react/24/solid';
+import { ChevronDownIcon, MoonIcon as MoonSolid } from '@heroicons/react/24/solid';
 import { MagnifyingGlassIcon, MoonIcon as MoonOutline } from '@heroicons/react/24/outline';
 
 
 import './App.css'
 import { useEffect, useState } from 'react';
+import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react';
 
 export function App() {
   const [darkMode, setDarkMode] = useState(
@@ -20,6 +21,13 @@ export function App() {
     }
   }, [darkMode]);
 
+  const filterItems : string[] = [
+    "Africa",
+    "America",
+    "Asia",
+    "Europe",
+    "Oceania"     
+  ]
   return (
     <>
     <header className='w-[100%] flex justify-center items-center dark:text-white dark:bg-darkBlue'>
@@ -31,12 +39,21 @@ export function App() {
         </button>
       </main>
     </header>
-      <main className='flex flex-col items-center w-[100%] dark:bg-veryDarkBlueBg flex-grow pt-10 bg-veryLightGray'>
-        <div className='flex w-[100%] max-w-[1440px] justify-between flex-row items-center sm:pr-18 sm:pl-18'>
-          <div className='flex flex-row items-center justify-center rounded-lg bg-white dark:bg-darkBlue gap-4 p-6 pt-4 pb-4 shadow'>
+      <main className='flex flex-col items-center w-[100%] dark:bg-veryDarkBlueBg flex-grow sm:pt-10 pt-7 bg-veryLightGray'>
+        <div className='flex w-[100%] max-w-[1440px] md:justify-between md:flex-row flex-col md:items-center md:gap-2.5 gap-9 items-start pl-5 sm:pr-18 sm:pl-18'>
+          <div className='flex flex-row items-center justify-center rounded-lg bg-white dark:bg-darkBlue gap-4 p-6 pt-4 pb-4 shadow-md sm:w-[350px] w-[95%]'>
             <MagnifyingGlassIcon className="size-[20px] dark:text-white text-gray-500 rounded-2xl"/>
-            <input placeholder='Search for a country...' className="text-gray-500 dark:text-white dark:placeholder-white font-light focus:outline-none text-[14px] w-[400px]"/>
+            <input placeholder='Search for a country...' className="text-gray-500 dark:text-white dark:placeholder-white dark:font-light placeholder-darkGray focus:outline-none sm:text-[14px] text-[12px] flex-1"/>
           </div>
+          <Listbox as="div" className="relative">
+            <ListboxButton className='w-[200px] p-5 font-light dark:bg-darkBlue text-[14px] dark:text-white shadow-md flex justify-between rounded-lg items-center flex-row'>
+              Filter by Region
+              <ChevronDownIcon className="size-[16px]"/>
+              </ListboxButton>
+            <ListboxOptions className="absolute b-0 shadow-md w-[200px] rounded-lg p-5 pt-3 pb-2 mt-1 text-[14px] font-light dark:bg-darkBlue dark:text-white">
+            {filterItems.map((item) => (<ListboxOption value="" key={item} className='pb-1 pt-1'>{item}</ListboxOption>))}
+            </ListboxOptions>
+          </Listbox>
         </div>
 
       </main>
