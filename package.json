@@ -17,6 +17,7 @@
     "json-server": "^1.0.0-beta.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-router-dom": "^6.30.0",
     "tailwindcss": "^4.0.12"
   },
   "devDependencies": {

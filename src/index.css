@@ -10,4 +10,5 @@
   --color-veryDarkBlueText : hsl(200, 15%, 8%);
   --color-darkGray : hsl(0, 0%, 52%);
   --color-veryLightGray : hsl(0, 0%, 98%);
+  --breakpoint-xxl: 82rem;
 }
