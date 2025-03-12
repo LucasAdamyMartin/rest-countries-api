@@ -1,10 +1,16 @@
-import { ChevronDownIcon, MoonIcon as MoonSolid } from '@heroicons/react/24/solid';
+import { MoonIcon as MoonSolid } from '@heroicons/react/24/solid';
 import { MagnifyingGlassIcon, MoonIcon as MoonOutline } from '@heroicons/react/24/outline';
-
-
 import './App.css'
 import { useEffect, useState } from 'react';
-import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react';
+import { Filter } from './components/Filter';
+import { useQuery } from '@tanstack/react-query';
+import { Country } from './types/Country';
+
+const fetchCountries = async () : Promise<Country[]> => {
+  const res = await fetch("/data.json");
+  if (!res.ok) throw new Error("Erreur réseau");
+  return res.json()
+}
 
 export function App() {
   const [darkMode, setDarkMode] = useState(
@@ -21,17 +27,31 @@ export function App() {
     }
   }, [darkMode]);
 
-  const filterItems : string[] = [
-    "Africa",
-    "America",
-    "Asia",
-    "Europe",
-    "Oceania"     
+  
+
+  const { data, isLoading, error } = useQuery<Country[]>({
+    queryKey: ["countries"],
+    queryFn: fetchCountries,
+  });
+
+  if (isLoading) return <p>Chargement...</p>;
+
+  if (error) return <p>Erreur : {error.message}</p>;
+
+  const countriesWelcomeName : string[] = [
+    "Germany", "United States of America", "Brazil", "Iceland"
   ]
+
+  const countriesWelcome  = countriesWelcomeName
+  .map((name) => data?.find((country) => country.name === name))
+  .filter((country): country is Country => country !== undefined);
+;
+
+
   return (
     <>
-    <header className='w-[100%] flex justify-center items-center dark:text-white dark:bg-darkBlue'>
-      <main className='flex flex-row justify-between items-center  max-w-[1440px] w-[100%] p-5  border-b-2 border-gray-200 dark:border-b-0 sm:pr-18 sm:pl-18 max-sm:pt-10 max-sm:pb-10'>
+    <header className='top-0 min-h-[75px] z-10 bg-white w-[100%] flex justify-center items-center dark:text-white dark:bg-darkBlue'>
+      <main className='fixed flex flex-row justify-between items-center  max-w-[1440px] w-[100%] p-5  border-b-2 border-gray-200 dark:border-b-0 sm:pr-18 sm:pl-18 max-sm:pt-10 max-sm:pb-10'>
         <h1 className="font-semibold sm:text-[22px]">Where in the world?</h1>
         <button onClick={() => (setDarkMode((prev) => (!prev)))} className='flex flex-row gap-3 justify-center items-center'>
           {darkMode ? <MoonSolid className='size-[16px]'/> : <MoonOutline className='size-[16px]'/>}
@@ -39,23 +59,35 @@ export function App() {
         </button>
       </main>
     </header>
-      <main className='flex flex-col items-center w-[100%] dark:bg-veryDarkBlueBg flex-grow sm:pt-10 pt-7 bg-veryLightGray'>
+      <main className='flex flex-col items-center w-[100%] dark:bg-veryDarkBlueBg flex-grow sm:pt-10 pt-7 bg-veryLightGray gap-12'>
         <div className='flex w-[100%] max-w-[1440px] md:justify-between md:flex-row flex-col md:items-center md:gap-2.5 gap-9 items-start pl-5 sm:pr-18 sm:pl-18'>
-          <div className='flex flex-row items-center justify-center rounded-lg bg-white dark:bg-darkBlue gap-4 p-6 pt-4 pb-4 shadow-md sm:w-[350px] w-[95%]'>
+          <div className='flex flex-row items-center justify-center rounded-lg bg-white dark:bg-darkBlue gap-4 p-6 pt-4 pb-4 shadow-md sm:w-[450px] w-[95%]'>
             <MagnifyingGlassIcon className="size-[20px] dark:text-white text-gray-500 rounded-2xl"/>
             <input placeholder='Search for a country...' className="text-gray-500 dark:text-white dark:placeholder-white dark:font-light placeholder-darkGray focus:outline-none sm:text-[14px] text-[12px] flex-1"/>
           </div>
-          <Listbox as="div" className="relative">
-            <ListboxButton className='w-[200px] p-5 font-light dark:bg-darkBlue text-[14px] dark:text-white shadow-md flex justify-between rounded-lg items-center flex-row'>
-              Filter by Region
-              <ChevronDownIcon className="size-[16px]"/>
-              </ListboxButton>
-            <ListboxOptions className="absolute b-0 shadow-md w-[200px] rounded-lg p-5 pt-3 pb-2 mt-1 text-[14px] font-light dark:bg-darkBlue dark:text-white">
-            {filterItems.map((item) => (<ListboxOption value="" key={item} className='pb-1 pt-1'>{item}</ListboxOption>))}
-            </ListboxOptions>
-          </Listbox>
+          <Filter/>
         </div>
-
+        <div className='grid grid-cols-4 gap-16'>
+        {
+          Array.isArray(data) ? (
+            data.map((country) => (
+              <button key={country.name} className="flex flex-col justify-center items-start shadow-md w-[275px] rounded-lg dark:bg-darkBlue dark:text-white">
+                <img className="w-[275px] h-[175px]" src={country.flags.png} alt={`${country.name} flag`} />
+                <div>
+                  <h1>{country.name}</h1>
+                  <div>
+                    <p>Population : {country.population}</p>
+                    <p>Region : {country.region}</p>
+                    <p>Capital : {country.capital}</p>
+                  </div>
+                </div>
+              </button>
+            ))
+          ) : (
+            <p>Erreur : Aucune donnée ou format de données incorrect</p>
+          )
+        }
+        </div>
       </main>
     </>
   )
