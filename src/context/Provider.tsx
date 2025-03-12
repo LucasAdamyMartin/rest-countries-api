@@ -8,9 +8,12 @@ type ProviderProps = {
 
 export const Provider = ( {children}:  ProviderProps) => {
     const [filter,setFilter] = useState<FilterType>("none");
-    const [darkMode, setDarkMode] = useState(
-        document.documentElement.getAttribute("data-theme") === "dark"
-      );
+    const getInitialTheme = () => {
+      const savedTheme = localStorage.getItem("theme");
+      if (savedTheme) return savedTheme === "dark";
+      return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    };
+    const [darkMode, setDarkMode] = useState(getInitialTheme);
     
     const value = useMemo(() => ({
         filter,

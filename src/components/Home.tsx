@@ -47,7 +47,7 @@ export function Home({data} : Readonly<homeProps>) {
             {
                 Array.isArray(dataToPrint) ? (
                 dataToPrint.map((country) => (
-                    <Country key={country.name} country={country}/>
+                    <Country key={country.name} country={country} />
                 ))
                 ) : (
                 <p>Erreur : Aucune donnée ou format de données incorrect</p>
