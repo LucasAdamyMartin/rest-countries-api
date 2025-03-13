@@ -30,7 +30,7 @@ export function Home({data} : Readonly<homeProps>) {
           const filtered = filter === "none"
             ? sortedCountries
             : sortedCountries.filter((element) => element.region === filter);
-          setDataToPrint(filtered.filter((country) => country.name.includes(search)));
+          setDataToPrint(filtered.filter((country) => country.name.toLowerCase().includes(search.toLowerCase())));
         }
       }, [filter, data, countriesWelcomeName, search]);
 

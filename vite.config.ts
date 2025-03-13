@@ -7,4 +7,6 @@ export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),],
+  base: "/rest-countries-api",
+
 })
