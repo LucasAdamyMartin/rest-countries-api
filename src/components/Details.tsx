@@ -1,5 +1,6 @@
 import { ArrowLongLeftIcon } from "@heroicons/react/24/solid"
 import { Country as CountryType} from "../types/Country"
+import { slugify } from "../services/slugify"
 
 type detailsProps = {country : CountryType, borderCountries : (CountryType[]) | undefined}
 
@@ -39,7 +40,7 @@ export function Details({country, borderCountries} : Readonly<detailsProps>) {
                                 {borderCountries.map((c) => (
                                     <a 
                                         key={c.name} 
-                                        href={`/${c.name}`}
+                                        href={`/${slugify(c.name)}`}
                                         className="p-2 shadow-md dark:text-white font-light rounded-lg dark:bg-darkBlue text-[12px]"
                                     >
                                         {c.name}
