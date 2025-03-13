@@ -3,6 +3,7 @@ import { Home } from "./components/Home";
 import { Details } from "./components/Details";
 import { useCountries } from "./hooks/useCountries";
 import { Country } from "./types/Country";
+import { slugify } from "./services/slugify";
 
 export function Routers() {
     const { data, isLoading, error } = useCountries();
@@ -20,7 +21,7 @@ export function Routers() {
         <Routes>
             <Route path="/" element={<Home data={data}/>}/>
             {data?.map((country)=> (
-                <Route key={country.name} path={`/${country.name.replace(/\s+/g, '-').toLowerCase()}`} element={<Details country={country} 
+                <Route key={country.name} path={`/${slugify(country.name)}`} element={<Details country={country} 
                 borderCountries={country.borders?.map((borderCode) => data.find((c) => c.alpha3Code === borderCode)).filter((c): c is Country => c !== undefined)}/>}/>
             ))}
             <Route path="/*" element={<Home data={data}/>}/>
