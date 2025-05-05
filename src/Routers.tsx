@@ -4,6 +4,7 @@ import { Details } from "./components/Details";
 import { useCountries } from "./hooks/useCountries";
 import { Country } from "./types/Country";
 import { slugify } from "./services/slugify";
+import Quiz from "./components/Quiz";
 
 export function Routers() {
     const { data, isLoading, error } = useCountries();
@@ -25,6 +26,7 @@ export function Routers() {
                 borderCountries={country.borders?.map((borderCode) => data.find((c) => c.alpha3Code === borderCode)).filter((c): c is Country => c !== undefined)}/>}/>
             ))}
             <Route path="/*" element={<Home data={data}/>}/>
+            <Route path="/quiz" element={<Quiz data={data}/>}/>
         </Routes>
     )
 }   
